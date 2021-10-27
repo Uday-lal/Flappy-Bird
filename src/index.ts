@@ -12,17 +12,28 @@ loadSprite("base", "base.png");
 loadSprite("bg", "bg.png");
 
 // Adding sprites
-add([sprite("bg"), scale(4.8, 1.5), { width: width(), height: height() }]);
+add([
+  sprite("bg", { width: width(), height: height() }),
+  { width: width(), height: height() },
+]);
 
 // Add pipe and base
 function addPipe() {
-  add([sprite("pipe"), pos(width(), height() - 400), "pipe"]);
+  const pipeHeight = 347;
+  const pipeGap = 100;
+  const offset = Math.round(rand(0, pipeHeight - 200));
+  const bottpmPipePos = pipeHeight - 100 + offset;
+  const targetPos = bottpmPipePos - pipeGap;
+  const topPipePos = targetPos - pipeHeight;
+  add([sprite("pipe", { flipY: true }), pos(width(), topPipePos), "pipe"]);
+  add([sprite("pipe"), pos(width(), bottpmPipePos), "pipe"]);
 }
 
 function addBase(x_pos: number) {
   add([sprite("base"), pos(x_pos, height() - 100), "base"]);
 }
-// Rendering the pipes
+
+// Rendering pipes
 addPipe();
 
 // Rendering the base stripe
@@ -34,6 +45,7 @@ for (let i = 0; i != Math.round(width() / 150); i++) {
 }
 
 loop(1.5, () => {
+  addPipe();
   addBase(width());
 });
 
