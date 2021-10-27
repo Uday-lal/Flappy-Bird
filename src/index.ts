@@ -21,21 +21,31 @@ add([
 // Add pipe and base
 function addPipe() {
   const pipeHeight = 347;
-  const pipeGap = 100;
+  const pipeGap = 200;
   const offset = Math.round(rand(0, pipeHeight - 200));
   const bottpmPipePos = pipeHeight - 100 + offset;
   const targetPos = bottpmPipePos - pipeGap;
   const topPipePos = targetPos - pipeHeight;
-  add([sprite("pipe", { flipY: true }), pos(width(), topPipePos), "pipe"]);
-  add([sprite("pipe"), pos(width(), bottpmPipePos), "pipe"]);
+  add([
+    sprite("pipe", { flipY: true }),
+    pos(width(), topPipePos),
+    area(),
+    body(),
+    "pipe",
+  ]);
+  add([sprite("pipe"), pos(width(), bottpmPipePos), area(), body(), "pipe"]);
 }
 
 function addBase(x_pos: number) {
-  add([sprite("base"), pos(x_pos, height() - 100), "base"]);
+  add([sprite("base"), pos(x_pos, height() - 100), area(), body(), "base"]);
 }
 
-add([sprite("bird"), scale(1.5), area()]);
+// Render the bird
+const bird = add([sprite("bird"), scale(1.5), pos(80, 40), area(), body()]);
 
+keyPress("space", () => {
+  bird.jump(500);
+});
 // Rendering pipes
 addPipe();
 
