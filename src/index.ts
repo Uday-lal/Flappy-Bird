@@ -7,6 +7,7 @@ loadRoot(
   "https://raw.githubusercontent.com/Uday-lal/Flappy-Bird/master/src/sprites/"
 );
 
+loadSprite("bird", "bird1.png");
 loadSprite("pipe", "pipe.png");
 loadSprite("base", "base.png");
 loadSprite("bg", "bg.png");
@@ -32,6 +33,8 @@ function addPipe() {
 function addBase(x_pos: number) {
   add([sprite("base"), pos(x_pos, height() - 100), "base"]);
 }
+
+add([sprite("bird"), scale(1.5), area()]);
 
 // Rendering pipes
 addPipe();
