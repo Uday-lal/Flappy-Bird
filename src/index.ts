@@ -13,11 +13,16 @@ loadSprite("base", "base.png");
 loadSprite("bg", "bg.png");
 
 scene("game", () => {
+  let score = 0;
   // Adding sprites
   add([
     sprite("bg", { width: width(), height: height() }),
     { width: width(), height: height() },
   ]);
+
+  // Add scores
+  const scoreText = add([text(`Score: ${score}`), { textSize: 40 }]);
+
   // Add pipe and base
   function addPipe() {
     const pipeHeight = 347;
@@ -31,6 +36,7 @@ scene("game", () => {
       pos(width(), topPipePos),
       area(),
       "pipe",
+      { passed: false },
     ]);
     add([sprite("pipe"), pos(width(), bottpmPipePos), area(), "pipe"]);
   }
@@ -47,11 +53,17 @@ scene("game", () => {
   });
 
   bird.collides("pipe", () => {
-    go("gameover", "You collied with a pipe gameover!!");
+    go("gameover", "You collied with a pipe gameover!!", score);
   });
 
   bird.collides("base", () => {
-    go("gameover", "You fall down gameover!!");
+    go("gameover", "You fall down gameover!!", score);
+  });
+
+  bird.action(() => {
+    if (bird.pos.y < 0) {
+      go("gameover", "You fly over the screen gameover!!");
+    }
   });
   // Rendering pipes
   addPipe();
@@ -76,15 +88,39 @@ scene("game", () => {
 
   action("pipe", (pipe: any) => {
     pipe.move(-160, 0);
+    if (pipe.passed === false && pipe.pos.x < bird.pos.x) {
+      pipe.passed = true;
+      score += 1;
+      scoreText.text = `Score: ${score}`;
+    }
   });
 });
 
-scene("gameover", (message: string) => {
+scene("gameover", (message: string, score: number) => {
+  add([text(message), { textSize: 60 }]);
+  add([text(`Your score is ${score}`), { textSize: 40 }, pos(0, 100)]);
   add([
-    text(message),
-    { textSize: 60 },
-    pos(Math.round(width() / 2) - 400, Math.round(height() / 2)),
+    text("Hit Jump to continue"),
+    { textSize: 40 },
+    pos(Math.round(width() / 2) - 300, Math.round(height() / 2) + 100),
   ]);
+  keyPress("space", () => {
+    go("game");
+  });
 });
 
-go("game");
+scene("intro", () => {
+  add([text("Welcome to flappy bird :)"), { textSize: 60 }]);
+  add([sprite("bird"), pos(80, 80), scale(2)]);
+  add([
+    text("Click to continue"),
+    { textSize: 40 },
+    pos(Math.round(width() / 2) - 300, Math.round(height() / 2) + 100),
+  ]);
+  const screen = document.getElementsByTagName("canvas")[0];
+  screen.addEventListener("click", () => {
+    go("game");
+  });
+});
+
+go("intro");
