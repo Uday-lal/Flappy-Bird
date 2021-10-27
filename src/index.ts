@@ -62,7 +62,7 @@ scene("game", () => {
 
   bird.action(() => {
     if (bird.pos.y < 0) {
-      go("gameover", "You fly over the screen gameover!!");
+      go("gameover", "You fly over the screen gameover!!", score);
     }
   });
   // Rendering pipes
