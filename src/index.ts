@@ -14,6 +14,7 @@ loadSprite("bg", "bg.png");
 
 scene("game", () => {
   let score = 0;
+  let moveSpeed = -160;
   // Adding sprites
   add([
     sprite("bg", { width: width(), height: height() }),
@@ -83,15 +84,18 @@ scene("game", () => {
 
   // Move components
   action("base", (base: any) => {
-    base.move(-160, 0);
+    base.move(moveSpeed, 0);
   });
 
   action("pipe", (pipe: any) => {
-    pipe.move(-160, 0);
+    pipe.move(moveSpeed, 0);
     if (pipe.passed === false && pipe.pos.x < bird.pos.x) {
       pipe.passed = true;
       score += 1;
       scoreText.text = `Score: ${score}`;
+      if (moveSpeed >= -800) {
+        moveSpeed += -5;
+      }
     }
   });
 });
